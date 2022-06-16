@@ -19,7 +19,6 @@ module.exports.createCard = (req, res, next) => {
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
-    .populate('owner')
     .then((cards) => res.send(cards))
     .catch(next);
 };
@@ -30,8 +29,9 @@ module.exports.deleteCard = (req, res, next) => {
     .then((card) => {
       if (!card) {
         next(new ErrorNotFound('Передан несуществующий _id карточки'));
+      } else {
+        res.send(card);
       }
-      res.send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -47,13 +47,13 @@ module.exports.likeCard = (req, res, next) => {
     req.params.cardId,
     { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
     { new: true },
-  ).populate('owner')
-    .then((card) => {
-      if (!card) {
-        next(new ErrorNotFound('Передан несуществующий _id карточки'));
-      }
+  ).then((card) => {
+    if (!card) {
+      next(new ErrorNotFound('Передан несуществующий _id карточки'));
+    } else {
       res.send(card);
-    })
+    }
+  })
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new ErrorBadRequest('Передан несуществующий _id карточки'));
@@ -70,14 +70,13 @@ module.exports.dislikeCard = (req, res, next) => {
     req.params.cardId,
     { $pull: { likes: req.user._id } }, // убрать _id из массива
     { new: true },
-  ).populate('owner')
-    .then((card) => {
-      if (!card) {
-        next(new ErrorNotFound('Передан несуществующий _id карточки'));
-      } else {
-        res.send(card);
-      }
-    })
+  ).then((card) => {
+    if (!card) {
+      next(new ErrorNotFound('Передан несуществующий _id карточки'));
+    } else {
+      res.send(card);
+    }
+  })
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new ErrorBadRequest('Передан несуществующий _id карточки'));

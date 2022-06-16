@@ -13,8 +13,9 @@ module.exports.getUser = (req, res, next) => {
     .then((user) => {
       if (!user) {
         next(new ErrorNotFound('Пользователь по указанному _id не найден'));
+      } else {
+        res.status(200).send(user);
       }
-      res.status(200).send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -43,7 +44,6 @@ module.exports.setUser = (req, res, next) => {
   User.findByIdAndUpdate(req.user._id, { name, about }, {
     new: true, // обработчик then получит на вход обновлённую запись
     runValidators: true, // данные будут валидированы перед изменением
-    upsert: true, // если пользователь не найден, он будет создан
   })
     .then((user) => res.send(user))
     .catch((err) => {
@@ -62,7 +62,6 @@ module.exports.setUserAvatar = (req, res, next) => {
   User.findByIdAndUpdate(req.user._id, { avatar }, {
     new: true, // обработчик then получит на вход обновлённую запись
     runValidators: true, // данные будут валидированы перед изменением
-    upsert: true, // если пользователь не найден, он будет создан
   })
     .then((user) => res.send(user))
     .catch((err) => {

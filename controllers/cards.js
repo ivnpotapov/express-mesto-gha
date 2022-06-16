@@ -27,10 +27,15 @@ module.exports.getCards = (req, res, next) => {
 module.exports.deleteCard = (req, res, next) => {
   Card.findByIdAndRemove(req.params.cardId)
     .populate('owner')
-    .then((card) => res.send(card))
+    .then((card) => {
+      if (!card) {
+        next(new ErrorNotFound('Передан несуществующий _id карточки'));
+      }
+      res.send(card);
+    })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new ErrorNotFound('Карточка с указанным _id не найдена'));
+        next(new ErrorBadRequest('Карточка с указанным _id не найдена'));
       } else {
         next(err);
       }
@@ -43,10 +48,15 @@ module.exports.likeCard = (req, res, next) => {
     { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
     { new: true },
   ).populate('owner')
-    .then((card) => res.send(card))
+    .then((card) => {
+      if (!card) {
+        next(new ErrorNotFound('Передан несуществующий _id карточки'));
+      }
+      res.send(card);
+    })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new ErrorNotFound('Передан несуществующий _id карточки'));
+        next(new ErrorBadRequest('Передан несуществующий _id карточки'));
       } else if (err.name === 'ValidationError') {
         next(new ErrorBadRequest('Переданы некорректные данные для постановки/снятии лайка'));
       } else {
@@ -61,10 +71,15 @@ module.exports.dislikeCard = (req, res, next) => {
     { $pull: { likes: req.user._id } }, // убрать _id из массива
     { new: true },
   ).populate('owner')
-    .then((card) => res.send(card))
+    .then((card) => {
+      if (!card) {
+        next(new ErrorNotFound('Передан несуществующий _id карточки'));
+      }
+      res.send(card);
+    })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new ErrorNotFound('Передан несуществующий _id карточки'));
+        next(new ErrorBadRequest('Передан несуществующий _id карточки'));
       } else if (err.name === 'ValidationError') {
         next(new ErrorBadRequest('Переданы некорректные данные для постановки/снятии лайка'));
       } else {

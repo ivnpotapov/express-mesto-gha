@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const routesUsers = require('./routes/users');
 const routesCards = require('./routes/cards');
 const handleError = require('./errors/handleError');
+const ErrorNotFound = require('./errors/ErrorNotFound');
 
 const { PORT = 3000 } = process.env;
 
@@ -23,8 +24,11 @@ app.use((req, res, next) => {
 
 app.use('/cards', routesCards);
 app.use('/users', routesUsers);
+app.use('/*', () => {
+  throw new ErrorNotFound('Путь не найден');
+});
 app.use(handleError);
 
 app.listen(PORT, () => {
-  console.log(`App listening on port ${PORT}`);
+
 });

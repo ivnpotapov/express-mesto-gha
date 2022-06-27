@@ -3,7 +3,7 @@ const { generateToken } = require('../helpers/jwt');
 const User = require('../models/user');
 const ErrorBadRequest = require('../errors/ErrorBadRequest');
 const ErrorNotFound = require('../errors/ErrorNotFound');
-const ErrorForbidden = require('../errors/ErrorForbidden');
+// const ErrorForbidden = require('../errors/ErrorForbidden');
 const ErrorUnauthorized = require('../errors/ErrorUnauthorized');
 const ErrorConflict = require('../errors/ErrorConflict');
 
@@ -19,7 +19,7 @@ module.exports.login = (req, res, next) => {
     .select('+password')
     .then((user) => {
       if (!user) {
-        next(new ErrorForbidden('Неправильный Email или пароль')); // 403
+        next(new ErrorUnauthorized('Неправильный Email или пароль')); // 401
       }
 
       return Promise.all([
@@ -81,7 +81,7 @@ module.exports.getUsers = (req, res, next) => {
 module.exports.getUser = (req, res, next) => {
   User.findById(req.user || req.params.userId)
     .then((user) => {
-      if (!user) {
+      if (!user || (req.params.userId && (user._id.toString() !== req.params.userId))) {
         next(new ErrorNotFound('Пользователь по указанному _id не найден'));
       } else {
         res.status(200).send(user);

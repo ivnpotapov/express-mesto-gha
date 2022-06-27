@@ -19,7 +19,7 @@ module.exports.login = (req, res, next) => {
     .select('+password')
     .then((user) => {
       if (!user) {
-        next(new ErrorUnauthorized('Неправильный Email или пароль')); // 401
+        return next(new ErrorUnauthorized('Неправильный Email или пароль')); // 401
       }
 
       return Promise.all([
@@ -29,7 +29,7 @@ module.exports.login = (req, res, next) => {
     })
     .then(([user, isPasswordCorrect]) => {
       if (!isPasswordCorrect) {
-        next(new ErrorUnauthorized('Неправильный Email или пароль')); // 401
+        return next(new ErrorUnauthorized('Неправильный Email или пароль')); // 401
       }
       return generateToken(user._id);
     })
@@ -105,7 +105,7 @@ module.exports.setUser = (req, res, next) => {
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new ErrorNotFound('Пользователь по указанному _id не найден'));
+        next(new ErrorBadRequest('Пользователь по указанному _id не найден'));
       } else if (err.name === 'ValidationError') {
         next(new ErrorBadRequest('Переданы некорректные данные при создании пользователя'));
       } else {
@@ -123,7 +123,7 @@ module.exports.setUserAvatar = (req, res, next) => {
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new ErrorNotFound('Пользователь по указанному _id не найден'));
+        next(new ErrorBadRequest('Пользователь по указанному _id не найден'));
       } else if (err.name === 'ValidationError') {
         next(new ErrorBadRequest('Переданы некорректные данные при обновлении аватара'));
       } else {

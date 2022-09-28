@@ -14,10 +14,10 @@ module.exports.handleCors = (req, res, next) => {
   const requestHeaders = req.headers['access-control-request-headers']; // сохраняем список заголовков исходного запроса
   const { method } = req; // Сохраняем тип запроса (HTTP-метод) в соответствующую переменную
   const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE'; // Значение для заголовка Access-Control-Allow-Methods по умолчанию (разрешены все типы запросов)
-  console.log(origin);
+
   if (allowedCors.includes(origin)) {
     // проверяем, что источник запроса есть среди разрешённых
-    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Origin', origin);
   }
 
   if (method === 'OPTIONS') {

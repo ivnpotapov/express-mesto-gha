@@ -2,7 +2,9 @@ module.exports.handleCors = (req, res, next) => {
   const allowedCors = [
     'https://iv-partner.nomoredomains.xyz',
     'http://iv-partner.nomoredomains.xyz',
-    'localhost:3000',
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'https://ivnpotapov.github.io/react-mesto-auth',
   ];
 
   const { origin } = req.headers; // Сохраняем источник запроса в переменную origin

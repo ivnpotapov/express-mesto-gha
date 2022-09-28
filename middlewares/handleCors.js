@@ -17,7 +17,7 @@ module.exports.handleCors = (req, res, next) => {
 
   if (allowedCors.includes(origin)) {
     // проверяем, что источник запроса есть среди разрешённых
-    res.header('Access-Control-Allow-Origin', origin);
+    res.header('Access-Control-Allow-Origin', '*');
   }
 
   if (method === 'OPTIONS') {

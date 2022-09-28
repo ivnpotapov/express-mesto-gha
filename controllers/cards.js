@@ -7,7 +7,6 @@ module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
 
   Card.create({ name, link, owner: req.user._id })
-    .then((card) => card.populate('owner'))
     .then((card) => res.send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -36,7 +35,9 @@ module.exports.deleteCard = (req, res, next) => {
       } else if (card.owner.toString() === req.user._id) {
         return Card.findByIdAndRemove(card._id);
       } else {
-        next(new ErrorForbidden('Нельзя удалять карточки другого пользователя'));
+        next(
+          new ErrorForbidden('Нельзя удалять карточки другого пользователя'),
+        );
       }
 
       return false;

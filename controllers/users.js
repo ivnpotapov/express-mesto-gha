@@ -34,7 +34,9 @@ module.exports.login = (req, res, next) => {
       return generateToken(user._id);
     })
     .then((token) => {
-      res.send({ token });
+      res.send({
+        token,
+      });
     })
     .catch((err) => {
       next(err);

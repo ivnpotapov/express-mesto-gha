@@ -4,6 +4,9 @@ module.exports.handleCors = (req, res, next) => {
     'http://iv-partner.nomoredomains.xyz',
     'http://localhost:3000',
     'http://localhost:3001',
+    'http://52.41.36.82',
+    'http://54.191.253.12',
+    'http://44.226.122.3',
     'https://ivnpotapov.github.io/react-mesto-auth',
   ];
 

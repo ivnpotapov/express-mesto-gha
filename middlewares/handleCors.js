@@ -7,7 +7,7 @@ module.exports.handleCors = (req, res, next) => {
     'http://52.41.36.82',
     'http://54.191.253.12',
     'http://44.226.122.3',
-    'https://ivnpotapov.github.io/react-mesto-auth',
+    'https://ivnpotapov.github.io',
   ];
 
   const { origin } = req.headers; // Сохраняем источник запроса в переменную origin
